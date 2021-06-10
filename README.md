@@ -1,2 +1,2 @@
 # impl-basic-toy
-Implement a simple basic interpreter toy in Python
+Implement a simple basic interpreter toy in Python.
