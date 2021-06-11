@@ -1,5 +1,6 @@
 class Position:
     def __init__(self, idx, ln, col, fn, ftxt) -> None:
+        # index, line, column, file text
         self.idx = idx
         self.ln = ln
         self.col = col

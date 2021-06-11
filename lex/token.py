@@ -1,5 +1,6 @@
 DIGITS = '0123456789'
 
+# Token Type
 TT_INT = 'INT'
 TT_FLOAT = 'FLOAT'
 TT_PLUS = 'PLUS'
