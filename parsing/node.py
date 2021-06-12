@@ -14,3 +14,12 @@ class BinOpNode:
 
     def __repr__(self) -> str:
         return f'({self.left_node}, {self.op_tok}, {self.right_node})'
+
+
+class UnaryOpNode:
+    def __init__(self, op_tok, node) -> None:
+        self.op_tok = op_tok
+        self.node = node
+
+    def __repr__(self):
+        return f'({self.op_tok}, {self.node})'
