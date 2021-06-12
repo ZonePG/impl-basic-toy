@@ -1,6 +1,9 @@
+from error.error import InvalidSyntaxError
+from parsing.parse_result import ParseResult
 from parsing.node import BinOpNode, NumberNode
 from lex.token import (
     TT_DIV,
+    TT_EOF,
     TT_FLOAT,
     TT_INT,
     TT_MINUS,
@@ -16,7 +19,16 @@ class Parser:
         self.advance()
 
     def parse(self):
-        return self.expr()
+        res = self.expr()
+        if not res.error and self.current_tok.type != TT_EOF:
+            return res.failure(
+                InvalidSyntaxError(
+                    self.current_tok.pos_start,
+                    self.current_tok.pos_end,
+                    "Expected '+', '-', '*' or '/'",
+                )
+            )
+        return res
 
     def advance(self):
         self.tok_idx += 1
@@ -25,11 +37,16 @@ class Parser:
         return self.current_tok
 
     def factor(self):
+        res = ParseResult()
         tok = self.current_tok
 
         if tok.type in (TT_INT, TT_FLOAT):
-            self.advance()
-            return NumberNode(tok)
+            res.register(self.advance())
+            return res.success(NumberNode(tok))
+
+        return res.failure(
+            InvalidSyntaxError(tok.pos_start, tok.pos_end, "Expected int or float")
+        )
 
     def term(self):
         return self.bin_op(self.factor, (TT_MUL, TT_DIV))
@@ -39,12 +56,17 @@ class Parser:
 
     # function term and expr use it
     def bin_op(self, func, ops):
-        left_node = func()
+        res = ParseResult()
+        left_node = res.register(func())
+        if res.error:
+            return res
 
         while self.current_tok.type in ops:
             op_tok = self.current_tok
-            self.advance()
-            right_node = func()
+            res.register(self.advance())
+            right_node = res.register(func())
+            if res.error:
+                return res
             left_node = BinOpNode(left_node, op_tok, right_node)
 
-        return left_node
+        return res.success(left_node)
