@@ -4,27 +4,27 @@ from interpreter.number import Number
 
 
 class Interpreter:
-    def visit(self, node):
+    def visit(self, node, context):
         method_name = f"visit_{type(node).__name__}"
         # "visit_BinOpNode"
         # "visit_NumberNode"
         method = getattr(self, method_name, self.no_visit_method)
-        return method(node)
+        return method(node, context)
 
-    def no_visit_method(self, node):
+    def no_visit_method(self, node, context):
         raise Exception(f"No visit_{type(node).__name__} method defined")
 
-    def visit_NumberNode(self, node):
+    def visit_NumberNode(self, node, context):
         return RTResult().success(
-            Number(node.tok.value).set_pos(node.pos_start, node.pos_end)
+            Number(node.tok.value).set_context(context).set_pos(node.pos_start, node.pos_end)
         )
 
-    def visit_BinOpNode(self, node):
+    def visit_BinOpNode(self, node, context):
         res = RTResult()
-        left = res.register(self.visit(node.left_node))
+        left = res.register(self.visit(node.left_node, context))
         if res.error:
             return res
-        right = res.register(self.visit(node.right_node))
+        right = res.register(self.visit(node.right_node, context))
         if res.error:
             return res
 
@@ -44,9 +44,9 @@ class Interpreter:
         else:
             return res.success(result.set_pos(node.pos_start, node.pos_end))
 
-    def visit_UnaryOpNode(self, node):
+    def visit_UnaryOpNode(self, node, context):
         res = RTResult()
-        number = res.register(self.visit(node.node))
+        number = res.register(self.visit(node.node, context))
         if res.error:
             return res
 
