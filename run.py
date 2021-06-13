@@ -1,3 +1,4 @@
+from interpreter import Interpreter
 from lex import Lexer
 from parsing import Parser
 
@@ -13,4 +14,11 @@ def run(text):
     parser = Parser(tokens)
     ast = parser.parse()
 
-    return ast.node, ast.error
+    if ast.error:
+        return None, ast.error
+
+    # Run Program
+    interpreter = Interpreter()
+    result = interpreter.visit(ast.node)
+
+    return result, None
