@@ -1,3 +1,4 @@
+from interpreter.runtime_result import RTResult
 from lex.token import TT_DIV, TT_MINUS, TT_MUL, TT_PLUS
 from interpreter.number import Number
 
@@ -14,28 +15,47 @@ class Interpreter:
         raise Exception(f"No visit_{type(node).__name__} method defined")
 
     def visit_NumberNode(self, node):
-        return Number(node.tok.value).set_pos(node.pos_start, node.pos_end)
+        return RTResult().success(
+            Number(node.tok.value).set_pos(node.pos_start, node.pos_end)
+        )
 
     def visit_BinOpNode(self, node):
-        left = self.visit(node.left_node)
-        right = self.visit(node.right_node)
+        res = RTResult()
+        left = res.register(self.visit(node.left_node))
+        if res.error:
+            return res
+        right = res.register(self.visit(node.right_node))
+        if res.error:
+            return res
 
-        result = Number(0)
+        result = None
+        error = None
         if node.op_tok.type == TT_PLUS:
-            result = left.added_to(right)
+            result, error = left.added_to(right)
         elif node.op_tok.type == TT_MINUS:
-            result = left.subbed_by(right)
+            result, error = left.subbed_by(right)
         elif node.op_tok.type == TT_MUL:
-            result = left.multed_by(right)
+            result, error = left.multed_by(right)
         elif node.op_tok.type == TT_DIV:
-            result = left.dived_by(right)
+            result, error = left.dived_by(right)
 
-        return result.set_pos(node.pos_start, node.pos_end)
+        if error:
+            return res.failure(error)
+        else:
+            return res.success(result.set_pos(node.pos_start, node.pos_end))
 
     def visit_UnaryOpNode(self, node):
-        number = self.visit(node.node)
+        res = RTResult()
+        number = res.register(self.visit(node.node))
+        if res.error:
+            return res
+
+        error = None
 
         if node.op_tok.type == TT_MINUS:
-            number = number.multed_by(Number(-1))
+            number, error = number.multed_by(Number(-1))
 
-        return number.set_pos(node.pos_start, node.pos_end)
+        if error:
+            return res.failure(error)
+        else:
+            return number.set_pos(node.pos_start, node.pos_end)

@@ -10,7 +10,7 @@ from lex.token import (
     TT_PLUS,
     TT_RPAREN,
 )
-from error.error import IllegalCharError
+from error import IllegalCharError
 from lex.position import Position
 
 

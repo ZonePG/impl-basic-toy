@@ -1,4 +1,4 @@
-from error.error import InvalidSyntaxError
+from error import InvalidSyntaxError
 from parsing.parse_result import ParseResult
 from parsing.node import BinOpNode, NumberNode, UnaryOpNode
 from lex.token import (
