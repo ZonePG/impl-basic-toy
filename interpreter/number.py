@@ -34,5 +34,9 @@ class Number:
                 return None, RTError(other.pos_start, other.pos_end, "Divsion by zero", self.context)
             return Number(self.value / other.value).set_context(self.context), None
 
+    def powered_by(self, other):
+        if isinstance(other, Number):
+            return Number(self.value ** other.value).set_context(self.context), None
+
     def __repr__(self) -> str:
         return str(self.value)

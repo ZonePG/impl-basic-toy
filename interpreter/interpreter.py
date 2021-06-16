@@ -1,5 +1,5 @@
 from interpreter.runtime_result import RTResult
-from lex.token import TT_DIV, TT_MINUS, TT_MUL, TT_PLUS
+from lex.token import TT_DIV, TT_MINUS, TT_MUL, TT_PLUS, TT_POW
 from interpreter.number import Number
 
 
@@ -38,6 +38,8 @@ class Interpreter:
             result, error = left.multed_by(right)
         elif node.op_tok.type == TT_DIV:
             result, error = left.dived_by(right)
+        elif node.op_tok.type == TT_POW:
+            result, error = left.powered_by(right)
 
         if error:
             return res.failure(error)
