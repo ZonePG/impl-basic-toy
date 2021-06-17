@@ -1,3 +1,4 @@
+# runtime result
 class RTResult:
     def __init__(self) -> None:
         self.value = None
