@@ -1,3 +1,4 @@
-from error.illegeal_cahr_error import IllegalCharError
+from error.illegal_char_error import IllegalCharError
 from error.invalid_syntax_error import InvalidSyntaxError
 from error.runtime_error import RTError
+from error.expected_char_error import ExpectedCharError
