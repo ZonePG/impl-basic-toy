@@ -1,6 +1,12 @@
 from error import InvalidSyntaxError
 from parsing.parse_result import ParseResult
-from parsing.node import BinOpNode, NumberNode, UnaryOpNode, VarAccessNode, VarAssignNode
+from parsing.node import (
+    BinOpNode,
+    NumberNode,
+    UnaryOpNode,
+    VarAccessNode,
+    VarAssignNode,
+)
 from lex.token import (
     TT_DIV,
     TT_EE,
@@ -82,11 +88,15 @@ class Parser:
                 )
 
         return res.failure(
-            InvalidSyntaxError(tok.pos_start, tok.pos_end, " zpp Expected int, float, identifier, 'VAR', '+', '-' or '('")
+            InvalidSyntaxError(
+                tok.pos_start,
+                tok.pos_end,
+                " zpp Expected int, float, identifier, 'VAR', '+', '-' or '('",
+            )
         )
 
     def power(self):
-        return self.bin_op(self.atom, (TT_POW, ), self.factor)
+        return self.bin_op(self.atom, (TT_POW,), self.factor)
 
     def factor(self):
         res = ParseResult()
@@ -111,7 +121,7 @@ class Parser:
     def comp_expr(self):
         res = ParseResult()
 
-        if self.current_tok.matches(TT_KEYWORD, 'NOT'):
+        if self.current_tok.matches(TT_KEYWORD, "NOT"):
             op_tok = self.current_tok
             res.register_advancement()
             self.advance()
@@ -121,28 +131,48 @@ class Parser:
                 return res
             return res.success(UnaryOpNode(op_tok, node))
 
-        node = res.register(self.bin_op(self.arith_expr, (TT_EE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE)))
+        node = res.register(
+            self.bin_op(self.arith_expr, (TT_EE, TT_NE, TT_LT, TT_GT, TT_LTE, TT_GTE))
+        )
 
         if res.error:
-            return res.failure(InvalidSyntaxError(self.current_tok.pos_start, self.current_tok.pos_end, "Expected int, float, identifier, '+', '-' '(', 'NOT'"))
+            return res.failure(
+                InvalidSyntaxError(
+                    self.current_tok.pos_start,
+                    self.current_tok.pos_end,
+                    "Expected int, float, identifier, '+', '-' '(', 'NOT'",
+                )
+            )
 
         return res.success(node)
 
     def expr(self):
         res = ParseResult()
-        if self.current_tok.matches(TT_KEYWORD, 'VAR'):
+        if self.current_tok.matches(TT_KEYWORD, "VAR"):
             res.register_advancement()
             self.advance()
 
             if self.current_tok.type != TT_IDENTIFIER:
-                return res.failure(InvalidSyntaxError(self.current_tok.pos_start, self.current_tok.pos_end, "Expected identifier"))
+                return res.failure(
+                    InvalidSyntaxError(
+                        self.current_tok.pos_start,
+                        self.current_tok.pos_end,
+                        "Expected identifier",
+                    )
+                )
 
             var_name = self.current_tok
             res.register_advancement()
             self.advance()
 
             if self.current_tok.type != TT_EQ:
-                return res.failure(InvalidSyntaxError(self.current_tok.pos_start, self.current_tok.pos_end, "Expected '='"))
+                return res.failure(
+                    InvalidSyntaxError(
+                        self.current_tok.pos_start,
+                        self.current_tok.pos_end,
+                        "Expected '='",
+                    )
+                )
 
             res.register_advancement()
             self.advance()
@@ -150,11 +180,17 @@ class Parser:
             if res.error:
                 return res
             return res.success(VarAssignNode(var_name, expr))
-        node = res.register(self.bin_op(self.comp_expr, ((TT_KEYWORD, "AND"), (TT_KEYWORD, "OR"))))
+        node = res.register(
+            self.bin_op(self.comp_expr, ((TT_KEYWORD, "AND"), (TT_KEYWORD, "OR")))
+        )
 
         if res.error:
             return res.failure(
-                InvalidSyntaxError(self.current_tok.pos_start, self.current_tok.pos_end, "Expected 'VAR', int, float, identifier, '+', '-' or '('")
+                InvalidSyntaxError(
+                    self.current_tok.pos_start,
+                    self.current_tok.pos_end,
+                    "Expected 'VAR', int, float, identifier, '+', '-' or '('",
+                )
             )
 
         return res.success(node)
@@ -168,7 +204,10 @@ class Parser:
         if res.error:
             return res
 
-        while self.current_tok.type in ops or (self.current_tok.type, self.current_tok.value) in ops:
+        while (
+            self.current_tok.type in ops
+            or (self.current_tok.type, self.current_tok.value) in ops
+        ):
             op_tok = self.current_tok
             res.register_advancement()
             self.advance()
