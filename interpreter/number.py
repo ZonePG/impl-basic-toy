@@ -79,5 +79,8 @@ class Number:
         copy.set_context()
         return copy
 
+    def is_true(self):
+        return self.value != 0
+
     def __repr__(self) -> str:
         return str(self.value)
