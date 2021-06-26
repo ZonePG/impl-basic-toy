@@ -137,7 +137,7 @@ class Lexer:
         pos_start = self.pos.copy()
         self.advance()
 
-        if self.current_char == '>':
+        if self.current_char == ">":
             self.advance()
             tok_type = TT_ARROW
 

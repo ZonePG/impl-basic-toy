@@ -1,6 +1,19 @@
 from error.runtime_error import RTError
 from interpreter.runtime_result import RTResult
-from lex.token import TT_DIV, TT_EE, TT_GT, TT_GTE, TT_KEYWORD, TT_LT, TT_LTE, TT_MINUS, TT_MUL, TT_NE, TT_PLUS, TT_POW
+from lex.token import (
+    TT_DIV,
+    TT_EE,
+    TT_GT,
+    TT_GTE,
+    TT_KEYWORD,
+    TT_LT,
+    TT_LTE,
+    TT_MINUS,
+    TT_MUL,
+    TT_NE,
+    TT_PLUS,
+    TT_POW,
+)
 from interpreter.number import Number
 
 
@@ -28,7 +41,14 @@ class Interpreter:
         value = context.symbol_table.get(var_name)
 
         if not value:
-            return res.failure(RTError(node.pos_start, node.pos_end, f"'{var_name}' is not defined", context))
+            return res.failure(
+                RTError(
+                    node.pos_start,
+                    node.pos_end,
+                    f"'{var_name}' is not defined",
+                    context,
+                )
+            )
 
         # value = value.copy().set_pos(value.pos_start, value.pos_end)
         value = value.copy().set_pos(node.pos_start, node.pos_end)
@@ -77,9 +97,9 @@ class Interpreter:
             result, error = left.get_comparison_lte(right)
         elif node.op_tok.type == TT_GTE:
             result, error = left.get_comparison_gte(right)
-        elif node.op_tok.matches(TT_KEYWORD, 'AND'):
+        elif node.op_tok.matches(TT_KEYWORD, "AND"):
             result, error = left.anded_by(right)
-        elif node.op_tok.matches(TT_KEYWORD, 'OR'):
+        elif node.op_tok.matches(TT_KEYWORD, "OR"):
             result, error = left.ored_by(right)
 
         if error:
@@ -97,7 +117,7 @@ class Interpreter:
 
         if node.op_tok.type == TT_MINUS:
             number, error = number.multed_by(Number(-1))
-        elif node.op_tok.matches(TT_KEYWORD, 'NOT'):
+        elif node.op_tok.matches(TT_KEYWORD, "NOT"):
             number, error = number.notted()
 
         if error:
@@ -185,7 +205,11 @@ class Interpreter:
         func_name = node.var_name_tok.value if node.var_name_tok else None
         body_node = node.body_node
         arg_names = [arg_name.value for arg_name in node.arg_name_toks]
-        func_value = Function(func_name, body_node, arg_names).set_context(context).set_pos(node.pos_start, node.pos_end)
+        func_value = (
+            Function(func_name, body_node, arg_names)
+            .set_context(context)
+            .set_pos(node.pos_start, node.pos_end)
+        )
 
         if node.var_name_tok:
             context.symbol_table.set(func_name, func_value)

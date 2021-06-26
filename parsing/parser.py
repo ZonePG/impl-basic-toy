@@ -163,7 +163,13 @@ class Parser:
                         return res
 
                 if self.current_tok.type != TT_RPAREN:
-                    return res.failure(InvalidSyntaxError(self.current_tok.pos_start, self.current_tok.pos_end, "zp, Expected ',' or ')'"))
+                    return res.failure(
+                        InvalidSyntaxError(
+                            self.current_tok.pos_start,
+                            self.current_tok.pos_end,
+                            "Expected ',' or ')'",
+                        )
+                    )
 
                 res.register_advancement()
                 self.advance()
