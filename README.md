@@ -1,6 +1,22 @@
 # impl-basic-toy
 Implement a simple basic interpreter toy in Python.
 
-## Reference and Acknowledgement
-- [Make YOUR OWN Programming Language](https://www.youtube.com/watch?v=Eythq9848Fg&list=PLZQftyCk7_SdoVexSmwy_tBgs7P0b97yD&index=1)
+## Run
+`python3 run.py`
 
+## Progress
+- [x] Basic Lexer
+- [x] Basic Parser
+- [x] Basic Interpreter
+- [x] Power Operator
+- [x] Variables
+- [x] Comparisons and logical operators
+- [x] IF statement
+- [x] FOR and WHILE statement
+- [x] Functions
+- [ ] Strings
+- [ ] Lists
+- [ ] Built-in Functions
+- [ ] Multi-line statements
+- [ ] RETURN, CONTINUE, BREAK
+- [ ] RUN statement and comments
