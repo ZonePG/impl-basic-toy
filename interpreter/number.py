@@ -1,5 +1,6 @@
 from interpreter.value import Value
 from error import RTError
+import math
 
 
 class Number(Value):
@@ -121,3 +122,9 @@ class Number(Value):
 
     def __repr__(self) -> str:
         return str(self.value)
+
+
+Number.null = Number(0)
+Number.false = Number(0)
+Number.true = Number(1)
+Number.math_PI = Number(math.pi)
