@@ -7,6 +7,7 @@ from parsing.node import (
     FuncDefNode,
     IfNode,
     NumberNode,
+    StringNode,
     UnaryOpNode,
     VarAccessNode,
     VarAssignNode,
@@ -34,6 +35,7 @@ from lex.token import (
     TT_PLUS,
     TT_POW,
     TT_RPAREN,
+    TT_STRING,
 )
 
 
@@ -69,6 +71,11 @@ class Parser:
             res.register_advancement()
             self.advance()
             return res.success(NumberNode(tok))
+
+        if tok.type == TT_STRING:
+            res.register_advancement()
+            self.advance()
+            return res.success(StringNode(tok))
 
         elif tok.type == TT_IDENTIFIER:
             res.register_advancement()

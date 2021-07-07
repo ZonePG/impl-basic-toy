@@ -1,3 +1,4 @@
+from interpreter.string import String
 from error.runtime_error import RTError
 from interpreter.runtime_result import RTResult
 from lex.token import (
@@ -31,6 +32,13 @@ class Interpreter:
     def visit_NumberNode(self, node, context):
         return RTResult().success(
             Number(node.tok.value)
+            .set_context(context)
+            .set_pos(node.pos_start, node.pos_end)
+        )
+
+    def visit_StringNode(self, node, context):
+        return RTResult().success(
+            String(node.tok.value)
             .set_context(context)
             .set_pos(node.pos_start, node.pos_end)
         )

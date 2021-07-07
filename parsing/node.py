@@ -9,6 +9,17 @@ class NumberNode:
         return f"{self.tok}"
 
 
+class StringNode:
+    def __init__(self, tok) -> None:
+        self.tok = tok
+
+        self.pos_start = self.tok.pos_start
+        self.pos_end = self.tok.pos_end
+
+    def __repr__(self) -> str:
+        return f"{self.tok}"
+
+
 class BinOpNode:
     def __init__(self, left_node, op_tok, right_node) -> None:
         self.left_node = left_node
