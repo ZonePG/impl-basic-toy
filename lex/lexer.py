@@ -11,10 +11,12 @@ from lex.token import (
     TT_GTE,
     TT_IDENTIFIER,
     TT_KEYWORD,
+    TT_LSQUARE,
     TT_LT,
     TT_LTE,
     TT_NE,
     TT_POW,
+    TT_RSQUARE,
     TT_STRING,
     Token,
 )
@@ -78,6 +80,12 @@ class Lexer:
                 self.advance()
             elif self.current_char == ")":
                 tokens.append(Token(TT_RPAREN, pos_start=self.pos))
+                self.advance()
+            elif self.current_char == "[":
+                tokens.append(Token(TT_LSQUARE, pos_start=self.pos))
+                self.advance()
+            elif self.current_char == "]":
+                tokens.append(Token(TT_RSQUARE, pos_start=self.pos))
                 self.advance()
             elif self.current_char == "!":
                 tok, error = self.make_not_equals()

@@ -6,6 +6,7 @@ from parsing.node import (
     ForNode,
     FuncDefNode,
     IfNode,
+    ListNode,
     NumberNode,
     StringNode,
     UnaryOpNode,
@@ -27,6 +28,7 @@ from lex.token import (
     TT_INT,
     TT_KEYWORD,
     TT_LPAREN,
+    TT_LSQUARE,
     TT_LT,
     TT_LTE,
     TT_MINUS,
@@ -35,6 +37,7 @@ from lex.token import (
     TT_PLUS,
     TT_POW,
     TT_RPAREN,
+    TT_RSQUARE,
     TT_STRING,
 )
 
@@ -101,6 +104,12 @@ class Parser:
                     )
                 )
 
+        elif tok.type == TT_LSQUARE:
+            list_expr = res.register(self.list_expr())
+            if res.error:
+                return res
+            return res.success(list_expr)
+
         elif tok.matches(TT_KEYWORD, "IF"):
             if_expr = res.register(self.if_expr())
             if res.error:
@@ -129,7 +138,7 @@ class Parser:
             InvalidSyntaxError(
                 tok.pos_start,
                 tok.pos_end,
-                "Expected int, float, identifier, 'VAR', '+', '-' or '(', 'FOR', 'WHILE', 'FUN'",
+                "Expected int, float, identifier, 'VAR', '+', '-' or '(', '[', 'IF', 'FOR', 'WHILE', 'FUN'",
             )
         )
 
@@ -157,7 +166,7 @@ class Parser:
                         InvalidSyntaxError(
                             self.current_tok.pos_start,
                             self.current_tok.pos_end,
-                            "Expected ')', 'VAR', 'IF', 'FOR', 'WHILE', 'FUN', int, float, identifier, '+', '-', '(' or 'NOT'",
+                            "Expected ')', 'VAR', 'IF', 'FOR', 'WHILE', 'FUN', int, float, identifier, '+', '-', '(', '[' or 'NOT'",
                         )
                     )
 
@@ -225,7 +234,7 @@ class Parser:
                 InvalidSyntaxError(
                     self.current_tok.pos_start,
                     self.current_tok.pos_end,
-                    "Expected int, float, identifier, '+', '-' '(', 'NOT'",
+                    "Expected int, float, identifier, '+', '-' '(', '[' or 'NOT'",
                 )
             )
 
@@ -274,7 +283,7 @@ class Parser:
                 InvalidSyntaxError(
                     self.current_tok.pos_start,
                     self.current_tok.pos_end,
-                    "Expected 'VAR', 'IF', 'FOR', 'WHILE', 'FUN', int, float, identifier, '+', '-' or '('",
+                    "Expected 'VAR', 'IF', 'FOR', 'WHILE', 'FUN', int, float, identifier, '+', '-', '(', '[' or 'NOT'",
                 )
             )
 
@@ -302,6 +311,61 @@ class Parser:
             left_node = BinOpNode(left_node, op_tok, right_node)
 
         return res.success(left_node)
+
+    def list_expr(self):
+        res = ParseResult()
+        element_nodes = []
+        pos_start = self.current_tok.pos_start.copy()
+
+        if self.current_tok.type != TT_LSQUARE:
+            return res.failure(
+                InvalidSyntaxError(
+                    self.current_tok.pos_start,
+                    self.current_tok.pos_end,
+                    f"Expected '['",
+                )
+            )
+
+        res.register_advancement()
+        self.advance()
+
+        if self.current_tok.type == TT_RSQUARE:
+            res.register_advancement()
+            self.advance()
+        else:
+            element_nodes.append(res.register(self.expr()))
+            if res.error:
+                return res.failure(
+                    InvalidSyntaxError(
+                        self.current_tok.pos_start,
+                        self.current_tok.pos_end,
+                        "Expected ']', 'VAR', 'IF', 'FOR', 'WHILE', 'FUN', int, float, identifier, '+', '-', '(', '[' or 'NOT'",
+                    )
+                )
+
+            while self.current_tok.type == TT_COMMA:
+                res.register_advancement()
+                self.advance()
+
+                element_nodes.append(res.register(self.expr()))
+                if res.error:
+                    return res
+
+            if self.current_tok.type != TT_RSQUARE:
+                return res.failure(
+                    InvalidSyntaxError(
+                        self.current_tok.pos_start,
+                        self.current_tok.pos_end,
+                        "Expected ',' or ']'",
+                    )
+                )
+
+            res.register_advancement()
+            self.advance()
+
+        return res.success(
+            ListNode(element_nodes, pos_start, self.current_tok.pos_end.copy())
+        )
 
     def if_expr(self):
         res = ParseResult()

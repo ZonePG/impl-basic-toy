@@ -20,6 +20,14 @@ class StringNode:
         return f"{self.tok}"
 
 
+class ListNode:
+    def __init__(self, element_nodes, pos_start, pos_end):
+        self.element_nodes = element_nodes
+
+        self.pos_start = pos_start
+        self.pos_end = pos_end
+
+
 class BinOpNode:
     def __init__(self, left_node, op_tok, right_node) -> None:
         self.left_node = left_node
