@@ -1,0 +1,37 @@
+=========================
+IF <expr> THEN <expr>
+
+IF <expr> THEN
+  <expr1>
+  <expr2>
+  <expr3>
+END
+=========================
+
+
+=========================
+FUN <name>() -> <expr>
+
+FUN <name>()
+  <expr1>
+  <expr2>
+  <expr3>
+END
+=========================
+
+
+
+=========================
+PRINT("HELLO "); PRINT("WORLD")
+=========================
+
+
+
+=========================
+VAR a = IF 5 == 5 THEN "WORK!"
+
+IF 5 == 5 THEN
+  VAR a = "WORK1"
+ELSE
+  VAR a = "WORK2"
+END

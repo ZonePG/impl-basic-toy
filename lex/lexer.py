@@ -15,6 +15,7 @@ from lex.token import (
     TT_LT,
     TT_LTE,
     TT_NE,
+    TT_NEWLINE,
     TT_POW,
     TT_RSQUARE,
     TT_STRING,
@@ -54,6 +55,9 @@ class Lexer:
 
         while self.current_char is not None:
             if self.current_char in " \t":
+                self.advance()
+            elif self.current_char in ';\n':
+                tokens.append(Token(TT_NEWLINE, pos_start=self.pos))
                 self.advance()
             elif self.current_char in DIGITS:
                 tokens.append(self.make_number())
