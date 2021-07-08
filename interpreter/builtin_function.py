@@ -19,11 +19,11 @@ class BuiltInFunction(BaseFunction):
         method = getattr(self, method_name, self.no_visit_method)
 
         res.register(self.check_and_populate_args(method.arg_names, args, exec_ctx))
-        if res.error:
+        if res.should_return():
             return res
 
         return_value = res.register(method(exec_ctx))
-        if res.error:
+        if res.should_return():
             return res
         return res.success(return_value)
 
@@ -71,7 +71,7 @@ class BuiltInFunction(BaseFunction):
     execute_input_int.arg_names = []
 
     def execute_clear(self, exec_ctx):
-        os.system("cls" if os.name == "nt" else "clear")
+        os.system("cls" if os.name == "nt" else "cls")
         return RTResult().success(Number.null)
 
     execute_clear.arg_names = []
@@ -187,6 +187,62 @@ class BuiltInFunction(BaseFunction):
 
     execute_extend.arg_names = ["listA", "listB"]
 
+    def execute_len(self, exec_ctx):
+        list_ = exec_ctx.symbol_table.get("list")
+
+        if not isinstance(list_, List):
+            return RTResult().failure(
+                RTError(self.pos_start, self.pos_end, "Argument must be list", exec_ctx)
+            )
+
+        return RTResult().success(Number(len(list_.elements)))
+
+    execute_len.arg_names = ["list"]
+
+    def execute_run(self, exec_ctx):
+        fn = exec_ctx.symbol_table.get("fn")
+
+        if not isinstance(fn, String):
+            return RTResult().failure(
+                RTError(
+                    self.pos_start,
+                    self.pos_end,
+                    "Second argument must be string",
+                    exec_ctx,
+                )
+            )
+
+        fn = fn.value
+
+        try:
+            with open(fn, "r") as f:
+                script = f.read()
+        except Exception as e:
+            return RTResult().failure(
+                RTError(
+                    self.pos_start,
+                    self.pos_end,
+                    f'Failed to load script "{fn}"\n' + str(e),
+                    exec_ctx,
+                )
+            )
+
+        _, error = run(fn, script)
+
+        if error:
+            return RTResult().failure(
+                RTError(
+                    self.pos_start,
+                    self.pos_end,
+                    f'Failed to finish executing script "{fn}"\n' + error.as_string(),
+                    exec_ctx,
+                )
+            )
+
+        return RTResult().success(Number.null)
+
+    execute_run.arg_names = ["fn"]
+
 
 BuiltInFunction.print = BuiltInFunction("print")
 BuiltInFunction.print_ret = BuiltInFunction("print_ret")
@@ -200,3 +256,7 @@ BuiltInFunction.is_function = BuiltInFunction("is_function")
 BuiltInFunction.append = BuiltInFunction("append")
 BuiltInFunction.pop = BuiltInFunction("pop")
 BuiltInFunction.extend = BuiltInFunction("extend")
+BuiltInFunction.run = BuiltInFunction("run")
+BuiltInFunction.len = BuiltInFunction("len")
+
+from run import run

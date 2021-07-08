@@ -9,6 +9,7 @@ END
 =========================
 
 
+
 =========================
 FUN <name>() -> <expr>
 
@@ -16,14 +17,20 @@ FUN <name>()
   <expr1>
   <expr2>
   <expr3>
+  RETURN myvalue
 END
 =========================
+
+
+
 
 
 
 =========================
 PRINT("HELLO "); PRINT("WORLD")
 =========================
+
+
 
 
 
@@ -34,4 +41,19 @@ IF 5 == 5 THEN
   VAR a = "WORK1"
 ELSE
   VAR a = "WORK2"
+END
+========================
+
+
+
+
+
+=======================
+FOR i = 0 TO 10
+  IF somecondition THEN
+    BREAK
+  END
+  IF somecondition THEN
+    CONTINUE
+  END
 END

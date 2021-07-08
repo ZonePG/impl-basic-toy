@@ -45,6 +45,10 @@ KEYWORDS = [
     "STEP",
     "WHILE",
     "FUN",
+    "END",
+    "RETURN",
+    "CONTINUE",
+    "BREAK"
 ]
 
 

@@ -3,7 +3,7 @@ from interpreter.value import Value
 
 
 class String(Value):
-    def __init__(self, value) -> None:
+    def __init__(self, value):
         super().__init__()
         self.value = value
 
@@ -28,8 +28,8 @@ class String(Value):
         copy.set_context(self.context)
         return copy
 
-    def __str__(self) -> str:
+    def __str__(self):
         return self.value
 
-    def __repr__(self) -> str:
+    def __repr__(self):
         return f'"{self.value}"'
