@@ -14,9 +14,9 @@ Implement a simple basic interpreter toy in Python.
 - [x] IF statement
 - [x] FOR and WHILE statement
 - [x] Functions
-- [ ] Strings
-- [ ] Lists
-- [ ] Built-in Functions
-- [ ] Multi-line statements
-- [ ] RETURN, CONTINUE, BREAK
-- [ ] RUN statement and comments
+- [x] Strings
+- [x] Lists
+- [x] Built-in Functions
+- [x] Multi-line statements
+- [x] RETURN, CONTINUE, BREAK
+- [x] RUN statement and comments

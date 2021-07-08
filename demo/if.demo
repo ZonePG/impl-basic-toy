@@ -1,0 +1,12 @@
+VAR age = 19;
+VAR price = IF age >= 18 THEN 40 ELSE 20;
+
+VAR ex = 30;
+IF age > 20 THEN
+  VAR ex = 20
+ELSE
+  VAR ex = 25
+END
+
+PRINT(price)
+PRINT(ex)

@@ -1,0 +1,6 @@
+VAR i = 0
+
+WHILE i < 10 THEN
+  PRINT(i)
+  VAR i = i + 1
+END
