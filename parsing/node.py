@@ -32,6 +32,9 @@ class ListNode:
         self.pos_start = pos_start
         self.pos_end = pos_end
 
+    def __repr__(self) -> str:
+        return f"{self.element_nodes}"
+
 
 class VarAccessNode:
     def __init__(self, var_name_tok):
@@ -39,6 +42,9 @@ class VarAccessNode:
 
         self.pos_start = self.var_name_tok.pos_start
         self.pos_end = self.var_name_tok.pos_end
+
+    def __repr__(self) -> str:
+        return f"({self.var_name_tok})"
 
 
 class VarAssignNode:
@@ -48,6 +54,9 @@ class VarAssignNode:
 
         self.pos_start = self.var_name_tok.pos_start
         self.pos_end = self.value_node.pos_end
+
+    def __repr__(self) -> str:
+        return f"{self.var_name_tok}, EQ, {self.value_node}"
 
 
 class BinOpNode:
@@ -82,6 +91,9 @@ class IfNode:
 
         self.pos_start = self.cases[0][0].pos_start
         self.pos_end = (self.else_case or self.cases[len(self.cases) - 1])[0].pos_end
+
+    def __repr__(self) -> str:
+        return f"({self.cases}, {self.else_case})"
 
 
 class ForNode:
