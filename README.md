@@ -146,7 +146,7 @@ func-def : KEYWORD:FUN IDENTIFIER?
 
 以标识符`IDENTIFIER`为例，算法实现的状态转换图功能描述为下：
 
-<img src="https://github.com/ZonePG/impl-basic-toy/tree/main/doc/img/state.png" alt="1" style="zoom:50%;" />
+![state](./doc/img/state.png)
 
 其中 0 为初态，2 为终态。这个转换图识别（接受）标识符的过程是：从初态0开始，若在状态0之下输入字符是一个字母，则读进它，并转入状态1。在状态1之下，若下一个输入字符为字母或数字或下划线，则读进它，并重新进入状态1。一直重复这个过程直到状态1发现输入字符不再是字母或数字时就结束进入状态 2 终态，即开始识别其他类型 Token。
 
@@ -325,12 +325,13 @@ def generate_new_context(self):
 - 词法分析输出格式：返回识别单词Token类型。上述表达式 Token 输出形式为：`[KEYWORD:VAR, IDENTIFIER:a, EQ, INT:3, PLUS, INT:4, EOF]`，`VAR`为关键字，`a`是标识符，`=`是`EQ`赋值运算符，3 和 4 识别为 `INT`，+识别为`PLUS`运算符，EOF代表结束。
 - 语法分析输出格式：返回表达式的语法树，上述表达式的语法树输出形式为：`[IDENTIFIER:a, EQ, (INT:3, PLUS, INT:4)]`，表示如下内容
 
-<img src="https://github.com/ZonePG/impl-basic-toy/tree/main/doc/img/ast.png" alt="1" style="zoom:50%;" />
+![ast](./doc/img/ast.png)
+
 - 解释执行输出格式：直接返回运算结果，这里是`7`
 
 程序执行如下图：
 
-<img src="https://github.com/ZonePG/impl-basic-toy/tree/main/doc/img/program1.png" alt="1" style="zoom:50%;" />
+![program1](./doc/img/program1.png)
 
 ### 4. 程序运行结果
 
@@ -343,10 +344,11 @@ def generate_new_context(self):
 
 后续运行结果展示中，将直接展示解释器执行结果。
 
-<img src="https://github.com/ZonePG/impl-basic-toy/tree/main/doc/img/if1.png" alt="1" style="zoom:50%;" />
+![if1](./doc/img/if1.png)
 
 #### 4.2. FOR 循环
-<img src="https://github.com/ZonePG/impl-basic-toy/tree/main/doc/img/for1.png" alt="1" style="zoom:50%;" />
+
+![for1](./doc/img/for1.png)
 
 上述程序，第二条 FOR 语句输出的`[1, 2, 6, 24]`，是循环过程中每次的结果值，`result`结果值是24，`PRINT(result)`输出`result`并返回函数调用结果值，0表示成功返回。
 
@@ -376,26 +378,32 @@ PRINT(MIN(a))
 
 该程序解释执行结果如下图，运行结果为2，程序返回值为 0，表示成功运行。
 
-<img src="https://github.com/ZonePG/impl-basic-toy/tree/main/doc/img/min.png" alt="1" style="zoom:50%;" />
+![min](./doc/img/min.png)
 
 #### 4.4 错误分析提示
 ##### 4.4.1 词法分析阶段错误
 非法字符提示如下
-<img src="https://github.com/ZonePG/impl-basic-toy/tree/main/doc/img/error1.png" alt="1" style="zoom:50%;" />
+
+![error1](./doc/img/error1.png)
 
 不完整字符提示如下
-<img src="https://github.com/ZonePG/impl-basic-toy/tree/main/doc/img/error2.png" alt="1" style="zoom:50%;" />
+
+![error2](./doc/img/error2.png)
 
 ##### 4.4.2 语法分析阶段错误
 缺少关键字
-<img src="https://github.com/ZonePG/impl-basic-toy/tree/main/doc/img/error3.png" alt="1" style="zoom:50%;" />
+
+![error3](./doc/img/error3.png)
 
 缺少标识符
-<img src="https://github.com/ZonePG/impl-basic-toy/tree/main/doc/img/error4.png" alt="1" style="zoom:50%;" />
+
+![error4](./doc/img/error4.png)
 
 ##### 4.4.3 解释执行阶段错误
 未定义变量
-<img src="https://github.com/ZonePG/impl-basic-toy/tree/main/doc/img/error5.png" alt="1" style="zoom:50%;" />
+
+![error5](./doc/img/error5.png)
 
 除 0 错误
-<img src="https://github.com/ZonePG/impl-basic-toy/tree/main/doc/img/error6.png" alt="1" style="zoom:50%;" />
+
+![error6](./doc/img/error6.png)
